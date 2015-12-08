@@ -1,5 +1,5 @@
 [haproxy]
-debug_level   = true
+debug_level   = false 
 buffer_size   = 8192
 endpoint_type = 'hostname'
 metric_prefix = 'haproxy_'

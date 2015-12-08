@@ -116,7 +116,7 @@ class HaproxyStats(object):
 		haproxy_metric = self.getMetric()
 		r = requests.post(self.FalconCli, data=json.dumps(haproxy_metric))
 		if self.Debug:
-			print r.text
+			print haproxy_metric
 
 
 if __name__ == "__main__":
