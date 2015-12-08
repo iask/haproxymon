@@ -1,0 +1,8 @@
+[haproxy]
+debug_level   = true
+buffer_size   = 8192
+endpoint_type = 'hostname'
+metric_prefix = 'haproxy_'
+falcon_client = 'http://127.0.0.1:1988/v1/push'
+metrics       = ['qcur', 'scur', 'rate', 'status', 'ereq', 'econ', 'dreq','qtime','ctime']
+stats_file    = '/path/to/haproxy_install/var/run/stats'

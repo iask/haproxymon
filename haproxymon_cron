@@ -1,0 +1,1 @@
+* * * * * cd /path/to/haproxymon/; python bin/haproxymon.py -f etc/mon.toml > /dev/null 2>&1 &
