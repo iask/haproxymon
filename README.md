@@ -12,6 +12,7 @@ Haproxy monitor plugin for Open-Falcon
 操作系统: Linux
 
 Python > 2.6
+
 python-toml > 0.9.0
 
 haproxymon部署
