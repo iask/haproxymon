@@ -32,8 +32,8 @@ haproxymon部署
 
 5 endpoint默认是hostname,还可以指定EndpointType来设置为使用本机IP.
 
-6 该插件的局限性是对haproxy的配置文件格式有要求：
-  为在采集socket stats数据时能正确识别不同集群以及不同realServer，必须采用listen块来配置后端集群，参考例子如下：
+6 推荐haproxy的配置文件中使用listen块来配置后端集群：
+  本插件通过pxname,svname来识别不同metric的，参考例子如下：
   
      listen  http-in 0.0.0.0:80
         server server1:8000 192.168.0.10:8000 maxconn 32
