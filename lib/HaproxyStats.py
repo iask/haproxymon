@@ -33,7 +33,7 @@ class HaproxyStats(object):
 			if os.path.exists(self.StatsFile) and stat.S_ISSOCK(os.stat(self.StatsFile).st_mode):
 				self.socket_.connect(self.StatsFile)
 			else:
-				print >> sys.stderr,  "SOCK file: " + self.StatsFile + " dont exist"
+				print >> sys.stderr,  "-- SOCK file: " + self.StatsFile + " dont exist"
 				self._status = False
 		except socket.error, msg:
 			print >>sys.stderr, msg
@@ -123,13 +123,13 @@ class HaproxyStats(object):
 		r = requests.post(self.FalconCli, data=json.dumps(haproxy_metric))
 		if self.Debug >= 2:
 			print "-- Metric info:\n",haproxy_metric,"\n"
-		if self.Debug >= 1:
+		if self._status and self.Debug >= 1:
 			print "-- falcon return info:\n",r.text,"\n"
 
 
 if __name__ == "__main__":
 	conf = {
-		"debug_level" : 1,
+		"debug_level" : 2,
 		"endpoint_type" : "hostname",
 		"metric_prefix" : "haproxy_",
 		"falcon_client" : "http://127.0.0.1:1988/v1/push",
