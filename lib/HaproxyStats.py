@@ -47,6 +47,8 @@ class HaproxyStats(object):
 			if self._status:
 				self.socket_.send(COMMAND)
 				data = self.socket_.recv(self.BufferSize)
+				if self.Debug >= 3:
+					print "-- orgi stat info:\n",data,"\n"
 				data = data.split("\n")
 				for line in data:
 					Status = line.split(',')
@@ -58,6 +60,8 @@ class HaproxyStats(object):
 						Title = Status[0:-1]
 					else:
 						HS.append(Status)
+				if self.Debug >= 3:
+					print '-- stat info array:\n',HS,"\n"
 				NewHS = []
 				for MS in HS:
 					metric = {}
@@ -65,6 +69,8 @@ class HaproxyStats(object):
 						i = Title.index(header)
 						metric[header] = 0 if len(str(MS[i]))==0 else MS[i]
 					NewHS.append(metric)
+				if self.Debug >= 3:
+					print "-- stst info array by title:\n",NewHS,"\n"
 			return NewHS
 		except Exception, msg:
 			print >>sys.stderr, msg
@@ -115,20 +121,22 @@ class HaproxyStats(object):
 	def sendData(self):
 		haproxy_metric = self.getMetric()
 		r = requests.post(self.FalconCli, data=json.dumps(haproxy_metric))
-		if self.Debug:
-			print haproxy_metric
+		if self.Debug >= 2:
+			print "-- Metric info:\n",haproxy_metric,"\n"
+		if self.Debug >= 1:
+			print "-- falcon return info:\n",r.text,"\n"
 
 
 if __name__ == "__main__":
-        conf = {
-                "debug_level" : True,
-                "endpoint_type" : "hostname",
-                "metric_prefix" : "haproxy_",
-                "falcon_client" : "http://127.0.0.1:1988/v1/push",
-                "metrics" : ['qcur', 'scur', 'rate', 'status', 'ereq', 'drep', 'act', 'bck','qtime','ctime','rtime','ttime'],
-                "stats_file" : "/home/work/haproxy/var/run/stats",
+	conf = {
+		"debug_level" : 1,
+		"endpoint_type" : "hostname",
+		"metric_prefix" : "haproxy_",
+		"falcon_client" : "http://127.0.0.1:1988/v1/push",
+		"metrics" : ['qcur', 'scur', 'rate', 'status', 'ereq', 'drep', 'act', 'bck','qtime','ctime','rtime','ttime'],
+		"stats_file" : "/home/work/haproxy/var/run/stats",
 		"buffer_size" : 8192,
-        }
+	}
 	hs = HaproxyStats(conf)
 	hs.sendData()
 
