@@ -23,9 +23,24 @@ haproxymon部署
 
 3 配置crontab, 修改haproxymon_cron文件中haproxymon安装路径; cat haproxymon_cron >> /var/spool/cron/root 
 
-4 在haproxy.py中将debug_level设置为True，将会打印调试信息, 如无异常信息，，表示采集正常，此时会显示采集的metric内容；正式运行时还需要改为False，几分钟后，可从open-falcon的dashboard中查看haproxy metric
+4 在haproxy.py中将debug_level设置：    
+
+      0 表示不输出任何调试内容;
+      1 表示输出调用本地falcon代理的返回信息;
+      2 表示输出metric信息;
+      3 表示输出采集的原始stats内容；
 
 5 endpoint默认是hostname,还可以指定EndpointType来设置为使用本机IP.
+
+6 该插件的局限性是对haproxy的配置文件格式有要求：
+  为在采集socket stats数据时能正确识别不同集群以及不同realServer，必须采用listen块来配置后端集群，参考例子如下：
+  
+     listen  http-in 0.0.0.0:80
+        server server1:8000 192.168.0.10:8000 maxconn 32
+        server server2:8000 192.168.0.11:8000 maxconn 32
+        # other
+
+一般情况几分钟后，可从open-falcon的dashboard中查看haproxy metric
 
 采集的Haproxy指标
 ----------------------------------------
