@@ -23,7 +23,7 @@ class HaproxyStats(object):
 		if conf["endpoint_type"] == "hostname":
 			self.EndpointName = socket.gethostname()
 		else:
-			self.EndpointName = socket.gethostbyname(socket.gethostname())
+			self.EndpointName = self.get_local_ip()
 
 	def __del__(self):
 		self.socket_.close()
@@ -38,6 +38,16 @@ class HaproxyStats(object):
 		except socket.error, msg:
 			print >>sys.stderr, msg
 			self._status = False
+
+	def get_local_ip(self):
+		try:
+			s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+			s.connect(('8.8.8.8', 80))
+			(addr, port) = s.getsockname()
+			s.close()
+			return addr
+		except socket.error:
+			return socket.gethostbyname(socket.gethostname())
 
 	def get_ha_stats(self):
 		try:
@@ -130,7 +140,7 @@ class HaproxyStats(object):
 if __name__ == "__main__":
 	conf = {
 		"debug_level" : 2,
-		"endpoint_type" : "hostname",
+		"endpoint_type" : "ip",
 		"metric_prefix" : "haproxy_",
 		"falcon_client" : "http://127.0.0.1:1988/v1/push",
 		"metrics" : ['qcur', 'scur', 'rate', 'status', 'ereq', 'drep', 'act', 'bck','qtime','ctime','rtime','ttime'],
